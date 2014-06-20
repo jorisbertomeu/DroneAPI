@@ -5,25 +5,22 @@
 ** Login   <jobertomeu@epitech.net>
 ** 
 ** Started on  Fri Jun 20 15:45:33 2014 Joris Bertomeu
-** Last update Fri Jun 20 21:15:11 2014 Joris Bertomeu
+** Last update Fri Jun 20 21:26:50 2014 Joris Bertomeu
 */
 
 #include "drone_api.h"
 
-int	iSeq=1;
-int	isDroneStarted = 0;
-char	szSendBuffer[4096];
-float	fSpeed= (float) 0.2;
-int	iStartBit = 0;
-int	bKeyIsPressed = 0;
-int	sockATCMD;
+int		iSeq=1;
+int		isDroneStarted = 0;
+float		fSpeed = (float) 0.2;
+int		iStartBit = 0;
+int		sockATCMD;
 t_libclient	*slib;
-int	flag = 0;
+int		flag = 0;
 
 void	print_error(char *msg)
 {
   perror("API_ERROR ");
-  /* printf("Error : %s\n", msg); */
   exit (-1);
 }
 
@@ -39,11 +36,13 @@ void		SendPCMD_AT(int enable, float roll, float pitch, float gaz, float yaw)
   int		fiRoll;
   int		fiGaz;
   int		fiYaw;
+  char		szSendBuffer[4096];
 
   fiPitch = pitch;
   fiRoll = roll;
   fiGaz = gaz;
   fiYaw = yaw;
+  memset(szSendBuffer, 0, 4096);
   sprintf(szSendBuffer, "AT*PCMD=%d,%d,%d,%d,%d,%d\r", ++iSeq, enable,
 	    fiRoll, fiPitch, fiGaz, fiYaw);
   SendATCmd(szSendBuffer, strlen(szSendBuffer));
@@ -55,14 +54,17 @@ void	*alive()
   float roll = 0;
   float gaz = 0;
   float yaw = 0;
+  char	szSendBuffer[4096];
 
   while (1)
     {
       if (flag == 0)
 	{
 	  SendPCMD_AT(0, roll, pitch, gaz, yaw);
+	  memset(szSendBuffer, 0, 4096);
 	  sprintf(szSendBuffer, "AT*REF=%d,%d\r",++iSeq,iStartBit);
 	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
+	  memset(szSendBuffer, 0, 4096);
 	  sprintf(szSendBuffer, "AT*COMWDG=%d\r",++iSeq);
 	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
 	  usleep(250000);
@@ -70,13 +72,14 @@ void	*alive()
     }
 }
 
-void	MessageHandler(char *str)
+void		MessageHandler(char *str)
 {
-  float pitch = 0;
-  float roll = 0;
-  float gaz = 0;
-  float yaw = 0;
+  float		pitch = 0;
+  float		roll = 0;
+  float		gaz = 0;
+  float		yaw = 0;
   pthread_t	thread;
+  char		szSendBuffer[4096];
 
   if (str[0] == 'q') /* Gauche */
     {
@@ -110,14 +113,18 @@ void	MessageHandler(char *str)
 	  sprintf(szSendBuffer,
 		    "AT*CONFIG=%d,\"CONTROL:altitude_max\",\"3000\"\r", iSeq);
 	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
+	  memset(szSendBuffer, 0, 4096);
 	  sprintf(szSendBuffer, "AT*FTRIM\r");
 	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
+	  memset(szSendBuffer, 0, 4096);
 	  sprintf(szSendBuffer, "AT*FTRIM=%d\r", ++iSeq);
 	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
 	  usleep(50);
 	  iStartBit = iStartBit | (1 << 9);
+	  memset(szSendBuffer, 0, 4096);
 	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++iSeq, iStartBit);
 	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
+	  memset(szSendBuffer, 0, 4096);
 	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++iSeq, iStartBit);
 	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
 	  isDroneStarted = 1;
@@ -129,8 +136,10 @@ void	MessageHandler(char *str)
 	  flag = 1;
 	  /* Kill thread */
 	  iStartBit = iStartBit &~ (1 << 9);
+	  memset(szSendBuffer, 0, 4096);
 	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++iSeq, iStartBit);
 	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
+	  memset(szSendBuffer, 0, 4096);
 	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++iSeq, iStartBit);
 	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
 	  isDroneStarted = 0;
@@ -161,9 +170,11 @@ void	MessageHandler(char *str)
       if (iStartBit & (1 << 8))
 	{
 	  iStartBit = iStartBit | (1 << 8);
+	  memset(szSendBuffer, 0, 4096);
 	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++iSeq, iStartBit);
 	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
 	  iStartBit = iStartBit &~ (1 << 8);
+	  memset(szSendBuffer, 0, 4096);
 	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++iSeq, iStartBit);
 	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
 	}
@@ -171,6 +182,7 @@ void	MessageHandler(char *str)
 	{
 	  iStartBit = iStartBit | (1 << 8);
 	  iStartBit = iStartBit &~ (1 << 9);
+	  memset(szSendBuffer, 0, 4096);
 	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++iSeq, iStartBit);
 	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
 	  flag = 1;
@@ -180,33 +192,10 @@ void	MessageHandler(char *str)
   else
     {
       SendPCMD_AT(0, roll, pitch, gaz, yaw);
+      memset(szSendBuffer, 0, 4096);
       sprintf(szSendBuffer, "AT*COMWDG=%d\r", ++iSeq);
       SendATCmd(szSendBuffer, strlen(szSendBuffer));
     }
-  /* ReleaseMutex(hMyMutex); */
-}
-
-int			SetUpATSocket()
-{
-  struct hostent	*localHost;
-  char			*ip;
-  struct sockaddr_in	LocalAddr;
-  int			LocalAddrSize = sizeof (LocalAddr);
-  int			rc;
-
-  ip = malloc((INET_ADDRSTRLEN + 15) * sizeof(char));
-  memset(ip, 0, (INET_ADDRSTRLEN + 15));
-  LocalAddr.sin_family = AF_INET;
-  LocalAddr.sin_addr.s_addr = INADDR_ANY;
-  LocalAddr.sin_port = htons(AT_PORT + 100);
-  sockATCMD = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (sockATCMD == -1)
-    print_error("Socket Failed");
-  localHost = gethostbyname("");
-  rc = bind(sockATCMD, (struct sockaddr *) &LocalAddr, LocalAddrSize);
-  if (rc == -1)
-    return (0);
-  return (1);
 }
 
 void	aff_directives()
@@ -246,41 +235,4 @@ int		main(int ac, char **argv)
   else
     printf("Usage : %s <IP_addr> <Port>\n", argv[0]);
   return (0);
-}
-
-void	WndProc()
-{
-  /* HWND hWndOwner; */
-  /* RECT rcOwner,rcDlg,rc; */
-  /* int wmId, wmEvent; */
-  /* HDC hdc; */
-  /* float pitch=0; */
-  /* float roll=0; */
-  /* float gaz=0; */
-  /* float yaw=0; */
-
-  /* switch (message) */
-  /*   { */
-  /*   case WM_CREATE: */
-  /*     { */
-  /* 	/\* hMyMutex=CreateMutex(NULL,false,"MyMutex_ArDrone"); *\/ */
-  /* 	if (SetUpATSocket() == 0) */
-  /* 	  print_error("Socket creation failed"); */
-  /*     } */
-  /*     break; */
-  /*   case WM_TIMER: */
-  /*     { */
-  /* 	if (idletime >=200) */
-  /* 	  { */
-  /* 	    SendPCMD_AT(0, roll, pitch, gaz, yaw); */
-  /* 	    sprintf(szSendBuffer, "AT*REF=%d,%d\r",++iSeq,iStartBit); */
-  /* 	    SendATCmd(szSendBuffer, strlen(szSendBuffer)); */
-  /* 	    sprintf(szSendBuffer, "AT*COMWDG=%d\r",++iSeq); */
-  /* 	    SendATCmd(szSendBuffer, strlen(szSendBuffer)); */
-  /* 	  } */
-  /* 	/\* ReleaseMutex(hMyMutex); *\/ */
-  /*     } */
-  /*     break; */
-  /*   } */
-  /* return (0); */
 }
