@@ -15,11 +15,11 @@ For the moment, simples commands are available :
 
 Here's key mapping :
 
-       Take on / off => 'k'
-       Turn left / right => 'q' / 'd'
-       Go forward / backward => 'z' / 's'
-       Rotate left / right => '4' / '6'
-       Go up / down => '8' / '5'
+    Take on / off => 'k'
+    Turn left / right => 'q' / 'd'
+    Go forward / backward => 'z' / 's'
+    Rotate left / right => '4' / '6'
+    Go up / down => '8' / '5'
 
 Compilation :
 -------------
