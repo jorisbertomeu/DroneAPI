@@ -6,7 +6,7 @@ General
 
 This project aims to do a simple API for controlling Parrot ARDrone 2.0 in C.
 For the moment, simples commands are available :
--
+
     * Take on / off
     * Turn left / right
     * Go forward / backward
@@ -14,7 +14,7 @@ For the moment, simples commands are available :
     * Go up / down
 
 Here's key mapping :
--
+
        * Take on / off => 'k'
        * Turn left / right => 'q' / 'd'
        * Go forward / backward => 'z' / 's'
