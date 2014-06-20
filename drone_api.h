@@ -33,23 +33,24 @@
 # define KEY_GO_DOWN	'5'
 # define KEY_EMERGENCY	'r'
 
-typedef struct s_params t_params
-struct s_params
+typedef struct s_params t_params;
+struct	s_params
 {
   float roll;
   float pitch;
   float gaz;
   float yaw;
-}
+  float	speed;
+};
 
-typedef struct s_globl t_drone
-struct s_globl
+typedef struct s_globl t_drone;
+struct		s_globl
 {
-  t_libclient *slib;
-  int iSeq;
-  int isDroneStarted;
-  int flag;
-  t_params params;
-}
+  t_libclient	*slib;
+  int		iSeq;
+  int		isDroneStarted;
+  int		flag;
+  t_params	params;
+};
 
 #endif /* APIDRONE_H */

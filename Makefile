@@ -5,7 +5,7 @@
 
 PREFIX  = /usr/local
 CFLAGS  = 
-LDFLAGS = 
+LDFLAGS = -lpthread
 
 CC = gcc
 RM = rm -f
