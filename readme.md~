@@ -24,10 +24,7 @@ Here's key mapping :
 Compilation :
 -------------
 ```sh
-make
-make clean
-EXECUTION
-make fclean
+gcc *.c -o ardrone2 -lpthread
 ```
 
 Functionement :
