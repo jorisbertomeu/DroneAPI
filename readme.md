@@ -32,7 +32,7 @@ Functionement :
 * A simple communication between drone and computere is made with UDP socket creation.
 * Messages must be sent to the drone ( 192.168.1.1 ) with specific order.
 * Parallely, watchdog must be running : When first command is sent, thread start and sends sames messages each 250ms.
-* When user want sent command ( pressed key ), watchdog must be stopped during sending.
+* When user want send command ( pressed key ), watchdog must be stopped during sending.
 
 Next release ..
 ---------------
