@@ -5,16 +5,10 @@
 ** Login   <jobertomeu@epitech.net>
 ** 
 ** Started on  Fri Jun 20 15:45:33 2014 Joris Bertomeu
-** Last update Fri Jun 20 20:12:35 2014 Joris Bertomeu
+** Last update Fri Jun 20 21:15:11 2014 Joris Bertomeu
 */
 
-#include <pthread.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "libclient.h"
-#include "stdafx.h"
-#include "Drone.h"
+#include "drone_api.h"
 
 int	iSeq=1;
 int	isDroneStarted = 0;
