@@ -5,21 +5,17 @@
 ** Login   <jobertomeu@epitech.net>
 ** 
 ** Started on  Sat May 10 15:21:44 2014 Joris Bertomeu
-** Last update Fri Jun 20 19:48:33 2014 Joris Bertomeu
+** Last update Fri Jun 20 21:31:50 2014 Joris Bertomeu
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <string.h>
 #include "libclient.h"
 
 void	print_error_lib(char *str)
 {
-  fprintf(stderr, "/!\\========== ERROR ==========/!\\\n\nNETWORK_ERROR : (Code error : 0x568) >%s\n\t*Check connection between Drone and Computer\n\t*Check your firewall\n\t*Check functionment with another device\n\n/!\\========== ERROR ==========/!\\\n\n", str);
+  fprintf(stderr, "/!\\========== ERROR ==========/!\\\n\nNETWORK\
+_ERROR : (Code error : 0x568) >%s\n\t*Check connection between Drone\
+ and Computer\n\t*Check your firewall\n\t*Check functionment with\
+ another device\n\n/!\\========== ERROR ==========/!\\\n\n", str);
   exit(EXIT_FAILURE);
 }
 
@@ -52,18 +48,4 @@ void	init_lib(t_libclient *slib, char *ip, int port)
 	      (struct sockaddr *) &slib->serversockaddr,
 	      sizeof (slib->serversockaddr)) < 0 )
     print_error_lib("Connection request failed\n");
-}
-
-void	send_str(char *str, char *ip, int port)
-{
-  t_libclient	*slib;
-
-  slib = malloc(sizeof (*slib));
-  init_lib(slib, ip, port);
-  slib->flag = 1;
-
- 
-  shutdown(slib->to_server_socket, 2);
-  close(slib->to_server_socket);
-  free(slib);
 }

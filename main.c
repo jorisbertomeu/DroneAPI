@@ -5,7 +5,7 @@
 ** Login   <jobertomeu@epitech.net>
 ** 
 ** Started on  Fri Jun 20 15:45:33 2014 Joris Bertomeu
-** Last update Fri Jun 20 21:26:50 2014 Joris Bertomeu
+** Last update Fri Jun 20 21:40:08 2014 Joris Bertomeu
 */
 
 #include "drone_api.h"
@@ -81,27 +81,27 @@ void		MessageHandler(char *str)
   pthread_t	thread;
   char		szSendBuffer[4096];
 
-  if (str[0] == 'q') /* Gauche */
+  if (str[0] == KEY_LEFT_TURN) /* Gauche */
     {
       roll = -fSpeed;
       SendPCMD_AT(1, roll, pitch, gaz, yaw);
     }
-  else if (str[0] == 'z') /* Avancer */
+  else if (str[0] == KEY_FORWARD) /* Avancer */
     {
       pitch = -fSpeed;
       SendPCMD_AT(1, roll, pitch, gaz, yaw);
     }
-  else if (str[0] == 'd') /* Droite */
+  else if (str[0] == KEY_RIGHT_TURN) /* Droite */
     {
       roll = fSpeed;
       SendPCMD_AT(1, roll, pitch, gaz, yaw);
     }
-  else if (str[0] == 's') /* reculer */
+  else if (str[0] == KEY_BACKWARD) /* reculer */
     {
       pitch = fSpeed;
       SendPCMD_AT(1, roll, pitch, gaz, yaw);
     }
-  else if (str[0] == 'k')
+  else if (str[0] == KEY_TAKEON)
     {
       if (isDroneStarted == 0)
 	{
@@ -145,27 +145,27 @@ void		MessageHandler(char *str)
 	  isDroneStarted = 0;
 	}
     }
-  else if (str[0] == '4')
+  else if (str[0] == KEY_ROT_LEFT) /* Rot gauche */
     {
       yaw = -fSpeed;
       SendPCMD_AT(1, roll, pitch, gaz, yaw);
     }
-  else if (str[0] == '6')
+  else if (str[0] == KEY_ROT_RIGHT) /* rot droite */
     {
       yaw = fSpeed;
       SendPCMD_AT(1, roll, pitch, gaz, yaw);
     }
-  else if (str[0] == '5')
+  else if (str[0] == KEY_GO_DOWN) /* descendre */
     {
       gaz = -fSpeed;
       SendPCMD_AT(1, roll, pitch, gaz, yaw);
     }
-  else if (str[0] == '8')
+  else if (str[0] == KEY_GO_UP) /* monter */
     {
       gaz = fSpeed;
       SendPCMD_AT(1, roll, pitch, gaz, yaw);
     }
-  else if (str[0] == 'r')
+  else if (str[0] == KEY_EMERGENCY)
     {
       if (iStartBit & (1 << 8))
 	{
