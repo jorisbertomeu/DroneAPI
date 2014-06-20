@@ -1,6 +1,9 @@
 ARDrone API 1.0
 ===============
 
+General
+-------
+
 This project aims to do a simple API for controlling Parrot ARDrone 2.0 in C.
 For the moment, simples commands are available :
     * Take on / off
