@@ -3,18 +3,18 @@ ARDrone API 1.0
 
 This project aims to do a simple API for controlling Parrot ARDrone 2.0 in C.
 For the moment, simples commands are available :
-    - Take on / off
-    - Turn left / right
-    - Go forward / backward
-    - Rotate left / right
-    - Go up / down
+    * Take on / off
+    * Turn left / right
+    * Go forward / backward
+    * Rotate left / right
+    * Go up / down
 
 Here's key mapping :
-       - Take on / off => 'k'
-       - Turn left / right => 'q' / 'd'
-       - Go forward / backward => 'z' / 's'
-       - Rotate left / right => '4' / '6'
-       - Go up / down => '8' / '5'
+       * Take on / off => 'k'
+       * Turn left / right => 'q' / 'd'
+       * Go forward / backward => 'z' / 's'
+       * Rotate left / right => '4' / '6'
+       * Go up / down => '8' / '5'
 
 Compilation :
 -------------
