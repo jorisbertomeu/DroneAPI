@@ -17,6 +17,7 @@ int		iStartBit = 0;
 int		sockATCMD;
 t_libclient	*slib;
 int		flag = 0;
+t_drone         g_glob;
 
 void	print_error(char *msg)
 {
@@ -212,6 +213,13 @@ void	aff_directives()
   printf("================================================================\n");
 }
 
+void init_struct()
+{
+  drone.iSeq = 1;
+  drone.isDroneStarted = 0;
+  drone.flag = 0;
+}
+
 int		main(int ac, char **argv)
 {
   char		buff[128];
@@ -220,7 +228,8 @@ int		main(int ac, char **argv)
   if (ac == 3)
     {
       slib = malloc(sizeof(*slib));
-      init_lib(slib, argv[1], atoi(argv[2]));
+      init_lib(drone.slib, argv[1], atoi(argv[2]));
+      init_struct();
       slib->flag = 1;
       aff_directives();
       while (1)
