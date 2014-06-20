@@ -1,3 +1,27 @@
+ARDrone API 1.1
+===============
+
+What's up ?
+-------
+* API realised and integrated
+* Code cleanup
+* Makefile built
+
+Usage
+-----
+Main contains an example code to test API with a very simple shell-like, type a letter and associated action is executed.
+The first function called in main must be "init_api(int argc, char **argv)" who will check system configuration and arguments and initialize variables. Then, you must call "tread_api(int cmd)" to execute an action. You may specify custom values associated to differents actions who are describes in "keymapping.h"
+
+Next feature ..
+---------------
+*Library compilation
+
+Next release ..
+---------------
+* GUI integrated
+* Informations reception
+* Video signal reception & decoding
+
 ARDrone API 1.0
 ===============
 
