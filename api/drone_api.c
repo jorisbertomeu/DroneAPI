@@ -212,7 +212,7 @@ void	init_api(int ac, char **argv)
   if (ac == 3)
     {
       drone.slib = malloc(sizeof(*(drone.slib)));
-      /* init_lib(drone1->slib, argv[1], atoi(argv[2])); */
+      init_lib(drone.slib, argv[1], atoi(argv[2]));
       init_struct();
       drone.slib->flag = 1; 
     }
