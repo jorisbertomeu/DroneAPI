@@ -14,7 +14,7 @@ The first function called in main must be "init_api(int argc, char **argv)" who 
 
 Next feature ..
 ---------------
-*Library compilation
+* Library compilation
 
 Next release ..
 ---------------
