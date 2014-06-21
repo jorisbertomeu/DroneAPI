@@ -66,13 +66,85 @@ void	*alive()
     }
 }
 
-void		treat_api(int id)
+void	take_on_or_off()
 {
   pthread_t	thread;
   char		szSendBuffer[4096];
-  int		iStartBit = 0;
 
-  printf("Pressed : %x\n", id);
+  if (drone.isDroneStarted == 0)
+    {
+      drone.flag = 0;
+      SendATCmd("AT*CONFIG=\"general:navdata_demo\",\"TRUE\"\r",
+		strlen("AT*CONFIG=\"general:navdata_demo\",\"TRUE\"\r"));
+      SendATCmd("AT*CTRL=5,0\r", strlen("AT*CTRL=5,0\r"));
+      drone.iSeq = 1;
+      sprintf(szSendBuffer,
+	      "AT*CONFIG=%d,\"CONTROL:altitude_max\",\"3000\"\r", drone.iSeq);
+      SendATCmd(szSendBuffer, strlen(szSendBuffer));
+      memset(szSendBuffer, 0, 4096);
+      sprintf(szSendBuffer, "AT*FTRIM\r");
+      SendATCmd(szSendBuffer, strlen(szSendBuffer));
+      memset(szSendBuffer, 0, 4096);
+      sprintf(szSendBuffer, "AT*FTRIM=%d\r", ++drone.iSeq);
+      SendATCmd(szSendBuffer, strlen(szSendBuffer));
+      usleep(50);
+      iStartBit = iStartBit | (1 << 9);
+      memset(szSendBuffer, 0, 4096);
+      sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
+      SendATCmd(szSendBuffer, strlen(szSendBuffer));
+      memset(szSendBuffer, 0, 4096);
+      sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
+      SendATCmd(szSendBuffer, strlen(szSendBuffer));
+      drone.isDroneStarted = 1;
+      pthread_create(&thread, NULL, &alive, NULL);
+      /* Thread each 250ms */
+    }
+  else
+    {
+      drone.flag = 1;
+      /* Kill thread */
+      iStartBit = iStartBit &~ (1 << 9);
+      memset(szSendBuffer, 0, 4096);
+      sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
+      SendATCmd(szSendBuffer, strlen(szSendBuffer));
+      memset(szSendBuffer, 0, 4096);
+      sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
+      SendATCmd(szSendBuffer, strlen(szSendBuffer));
+      drone.isDroneStarted = 0;
+    }
+}
+
+void	emergency_key()
+{
+  char	szSendBuffer[4096];
+
+  if (iStartBit & (1 << 8))
+    {
+      iStartBit = iStartBit | (1 << 8);
+      memset(szSendBuffer, 0, 4096);
+      sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
+      SendATCmd(szSendBuffer, strlen(szSendBuffer));
+      iStartBit = iStartBit &~ (1 << 8);
+      memset(szSendBuffer, 0, 4096);
+      sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
+      SendATCmd(szSendBuffer, strlen(szSendBuffer));
+    }
+  else
+    {
+      iStartBit = iStartBit | (1 << 8);
+      iStartBit = iStartBit &~ (1 << 9);
+      memset(szSendBuffer, 0, 4096);
+      sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
+      SendATCmd(szSendBuffer, strlen(szSendBuffer));
+      drone.flag = 1;
+      /* Kill thread */
+    }
+}
+
+void		treat_api(int id)
+{
+  char		szSendBuffer[4096];
+
   if (id == KEY_LEFT_TURN) /* left */
     {
       drone.params.roll = -drone.params.speed;
@@ -93,50 +165,8 @@ void		treat_api(int id)
       drone.params.pitch = drone.params.speed;
       SendPCMD_AT(1, drone.params.roll, drone.params.pitch, drone.params.gaz, drone.params.yaw);
     }
-  else if (id == KEY_TAKEON)
-    {
-      if (drone.isDroneStarted == 0)
-	{
-	  drone.flag = 0;
-	  SendATCmd("AT*CONFIG=\"general:navdata_demo\",\"TRUE\"\r",
-		    strlen("AT*CONFIG=\"general:navdata_demo\",\"TRUE\"\r"));
-	  SendATCmd("AT*CTRL=5,0\r", strlen("AT*CTRL=5,0\r"));
-	  drone.iSeq = 1;
-	  sprintf(szSendBuffer,
-		    "AT*CONFIG=%d,\"CONTROL:altitude_max\",\"3000\"\r", drone.iSeq);
-	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
-	  memset(szSendBuffer, 0, 4096);
-	  sprintf(szSendBuffer, "AT*FTRIM\r");
-	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
-	  memset(szSendBuffer, 0, 4096);
-	  sprintf(szSendBuffer, "AT*FTRIM=%d\r", ++drone.iSeq);
-	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
-	  usleep(50);
-	  iStartBit = iStartBit | (1 << 9);
-	  memset(szSendBuffer, 0, 4096);
-	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
-	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
-	  memset(szSendBuffer, 0, 4096);
-	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
-	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
-	  drone.isDroneStarted = 1;
-	  pthread_create(&thread, NULL, &alive, NULL);
-	  /* Thread each 250ms */
-	}
-      else
-	{
-	  drone.flag = 1;
-	  /* Kill thread */
-	  iStartBit = iStartBit &~ (1 << 9);
-	  memset(szSendBuffer, 0, 4096);
-	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
-	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
-	  memset(szSendBuffer, 0, 4096);
-	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
-	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
-	  drone.isDroneStarted = 0;
-	}
-    }
+  else if (id == KEY_TAKEON) /* Taking on or off */
+    take_on_or_off();
   else if (id == KEY_ROT_LEFT) /* Rot left */
     {
       drone.params.yaw = -drone.params.speed;
@@ -157,30 +187,8 @@ void		treat_api(int id)
       drone.params.gaz = drone.params.speed;
       SendPCMD_AT(1, drone.params.roll, drone.params.pitch, drone.params.gaz, drone.params.yaw);
     }
-  else if (id == KEY_EMERGENCY)
-    {
-      if (iStartBit & (1 << 8))
-	{
-	  iStartBit = iStartBit | (1 << 8);
-	  memset(szSendBuffer, 0, 4096);
-	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
-	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
-	  iStartBit = iStartBit &~ (1 << 8);
-	  memset(szSendBuffer, 0, 4096);
-	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
-	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
-	}
-      else
-	{
-	  iStartBit = iStartBit | (1 << 8);
-	  iStartBit = iStartBit &~ (1 << 9);
-	  memset(szSendBuffer, 0, 4096);
-	  sprintf(szSendBuffer, "AT*REF=%d,%d\r", ++drone.iSeq, iStartBit);
-	  SendATCmd(szSendBuffer, strlen(szSendBuffer));
-	  drone.flag = 1;
-	  /* Kill thread */
-	}
-    }
+  else if (id == KEY_EMERGENCY) /* Emergency action */
+    emergency_key(iStartBit);
   else
     {
       SendPCMD_AT(0, drone.params.roll, drone.params.pitch, drone.params.gaz, drone.params.yaw);
