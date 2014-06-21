@@ -1,3 +1,19 @@
+ARDrone API 1.1.1
+=================
+
+What's up ?
+-----------
+* Static library generation
+* One folder for API, one folder for your code
+* Multi-Makefile ( .a Generation and your code compilation with static library )
+
+Next release ..
+---------------
+* Dynamic library generation
+* GUI integrated
+* Informations reception
+* Video signal reception & decoding
+
 ARDrone API 1.1
 ===============
 
@@ -14,7 +30,7 @@ The first function called in main must be "init_api(int argc, char **argv)" who 
 
 Next feature ..
 ---------------
-* Library compilation
+* Library generation
 
 Next release ..
 ---------------
