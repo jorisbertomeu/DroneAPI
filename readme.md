@@ -5,7 +5,7 @@ What's up ?
 -----------
 * Static library generation
 * One folder for API, one folder for your code
-* Multi-Makefile ( .a Generation and your code compilation with static library )
+* Multi-Makefile ( .a Generation and your code compilation with static library linkage )
 
 Next release ..
 ---------------
