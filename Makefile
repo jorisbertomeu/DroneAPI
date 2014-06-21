@@ -13,7 +13,7 @@ INSTALL_PROG = install -m 755 -s
 
 EXE = ardrone
 
-OBJS = libclient.o main.o
+OBJS = libclient.o main.o drone_api.o
 
 ALL : $(EXE)
 
@@ -22,6 +22,9 @@ libclient.o : libclient.c
 
 main.o : main.c
 	$(CC) -c main.c $(CFLAGS) -o main.o
+
+drone_api.o : drone_api.c
+	$(CC) -c drone_api.c $(CFLAGS) -o drone_api.o
 
 $(EXE) : $(OBJS)
 	$(CC) $(OBJS) -o $(EXE) $(LDFLAGS)

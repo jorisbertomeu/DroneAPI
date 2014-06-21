@@ -20,18 +20,9 @@
 # include <netinet/in.h>
 # include <sys/socket.h>
 # include "libclient.h"
+# include "keymapping.h"
 
 # define AT_PORT	5556
-# define KEY_LEFT_TURN	'q'
-# define KEY_RIGHT_TURN	'd'
-# define KEY_FORWARD	'z'
-# define KEY_BACKWARD	's'
-# define KEY_TAKEON	'k'
-# define KEY_ROT_LEFT	'4'
-# define KEY_ROT_RIGHT	'6'
-# define KEY_GO_UP	'8'
-# define KEY_GO_DOWN	'5'
-# define KEY_EMERGENCY	'r'
 
 typedef struct s_params t_params;
 struct	s_params
